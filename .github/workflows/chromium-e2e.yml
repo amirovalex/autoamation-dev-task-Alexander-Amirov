@@ -16,8 +16,6 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run tests Chrome Only
         run: TESTS_RUNNING_IN_ENVIROMENTS=chromium npx playwright test --project=e2e-chromium   
-      - name: Verify Playwright report path
-        run: ls -R playwright-report/
       - name: Verify test root path
         run: ls
       - uses: actions/upload-artifact@v4
