@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "adminjs",
+      "value": "s%3Ao-K-CGNOc01xQ48Zs_ZAhcnELuFSyMAW.gpowwYhVz4W78%2F%2BIPr2y%2FGMjUv1503SNW2W3orVZeTc",
+      "domain": "127.0.0.1",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "localStorage": [
+        {
+          "name": "i18nextLng",
+          "value": "en"
+        }
+      ]
+    }
+  ]
+}
