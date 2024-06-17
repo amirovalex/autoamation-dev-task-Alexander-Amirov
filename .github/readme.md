@@ -57,18 +57,18 @@ Password: password
 
 ### Test Scenario 1(UI)
 
-Step 1: Create Publisher
-Step 2: Create Post
-Step 3: Link to the Publisher created( Status= Active, Published= True) 
-Step 4: Edit Post - Change status to remove
-Step 5: Save
-Step 6: Validate post status was changed to Remove from the Post page
+- Step 1: Create Publisher
+- Step 2: Create Post
+- Step 3: Link to the Publisher created( Status= Active, Published= True) 
+- Step 4: Edit Post - Change status to remove
+- Step 5: Save
+- Step 6: Validate post status was changed to Remove from the Post page
 
 ### Test Scenario 2(API)
 
-Step 1: Create Publisher with API
-Step 2: Create Post with API
-Step 3: Link to the Publisher created( Status= Active, Published= True) 
-Step 4: Edit Post - Change status to remove
-Step 5: Save
-Step 6: Validate post status was changed to Remove from the Post page
+- Step 1: Create Publisher with API
+- Step 2: Create Post with API
+- Step 3: Link to the Publisher created( Status= Active, Published= True) 
+- Step 4: Edit Post - Change status to remove
+- Step 5: Save
+- Step 6: Validate post status was changed to Remove from the Post page
