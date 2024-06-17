@@ -10,14 +10,14 @@ This objective ensures that the entire workflow, from creating a publisher and p
 
 # Test Enviroment
 
-NodeJs V20.14
-Playwright V1.44
+- NodeJs V20.14
+- Playwright V1.44
 
 ## Other Dependencies
 
-Axios V1.7.2
-Dotenv V16.4.5
-Form-Data V4.0.0
+- Axios V1.7.2
+- Dotenv V16.4.5
+- Form-Data V4.0.0
 
 # Prerequisites
 
