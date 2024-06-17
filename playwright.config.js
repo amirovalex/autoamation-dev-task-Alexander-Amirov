@@ -47,44 +47,23 @@ module.exports = defineConfig({
     },
 
     {
-      name: 'functionality-chromium',
-      use: { ...devices['Desktop Chrome'] },
-      dependencies: ['setup'],
-      testMatch: 'tests/functionality/functionality.spec.js',
-    } ,
-
-    {
-      name: 'functionality-firefox',
-      use: { ...devices['Desktop Firefox'] },
-      dependencies: ['setup'],
-      testMatch: 'tests/functionality/functionality.spec.js',
-    },
-
-    {
-      name: 'functionality-webkit',
-      use: { ...devices['Desktop Safari'] },
-      dependencies: ['setup'],
-      testMatch: 'tests/functionality/functionality.spec.js',
-    },
-
-    {
       name: 'e2e-chromium',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['setup','functionality-chromium'],
+      dependencies: ['setup'],
       testMatch: 'tests/e2e/e2e.spec.js',
     },
 
     {
       name: 'e2e-firefox',
       use: { ...devices['Desktop Firefox'] },
-      dependencies: ['setup','functionality-firefox'],
+      dependencies: ['setup'],
       testMatch: 'tests/e2e/e2e.spec.js',
     },
 
     {
       name: 'e2e-webkit',
       use: { ...devices['Desktop Safari'] },
-      dependencies: ['setup','functionality-webkit'],
+      dependencies: ['setup'],
       testMatch: 'tests/e2e/e2e.spec.js',
 
     },
