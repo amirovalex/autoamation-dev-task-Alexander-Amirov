@@ -37,7 +37,6 @@ exports.ApiUtils = class ApiUtils {
 
     const response = await this.client.post('/admin/api/resources/Post/actions/new', form, { headers: {...form.getHeaders(), 'Cookie':this.cookie }, withCredentials: true });
     this.postId =  response.data.record.id
-    console.log('response.data: ',response.data.record.id)
     return response.data;
   }
 };

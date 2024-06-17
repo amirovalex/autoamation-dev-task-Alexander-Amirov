@@ -100,7 +100,6 @@ exports.PublisherPagePOM = class PublisherPagePOM {
   }
 
   async assertPublisherIsVisibleInTable() {
-    console.log(this.publisherRowInTable)
     await expect(this.publisherRowInTable).toBeVisible()
   }
 
