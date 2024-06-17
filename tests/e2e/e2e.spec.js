@@ -72,7 +72,7 @@ test('Check if a post can be created on a new publisher, and the publisher can c
     await postPage.findPostRowInTable()
     await postPage.clickPostRowInTable();
 
-    //Assert Post is removed
+    //Assert Post status is removed
     await showPostPage.assertPostStatusIsRemoved();
 })
 
@@ -89,12 +89,6 @@ test('Check if after a publisher and a post were created with API, the publisher
 
     //Assert Publisher was created
     await expect(api.publisherId).toBeTruthy();
-    // const publisherPage = new PublisherPagePOM(page,uniqueId);
-    // await publisherPage.goto();
-    // await publisherPage.filterPublisher();
-    // await publisherPage.findPublisherRowInTable();
-    // await publisherPage.assertPublisherIsVisibleInTable();
-
 
     //Step 2: Create Post using API + Step 3: Link to the Publisher created( Status= Active, Published= True)
     await api.createPost({title:'Test Post Title ' + uniqueId, content:'Test Post Content ' + uniqueId, someJsonNumber:'123', someJsonString:'Some JSON String', someJsonBoolean:'true', status:'ACTIVE', published:'true' });
@@ -128,6 +122,6 @@ test('Check if after a publisher and a post were created with API, the publisher
     await postPage.findPostRowInTable()
     await postPage.clickPostRowInTable();
 
-    //Assert Post is removed
+    //Assert Post status is removed
     await showPostPage.assertPostStatusIsRemoved();    
 })

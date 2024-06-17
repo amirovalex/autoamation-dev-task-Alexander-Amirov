@@ -25,6 +25,8 @@ test('Login to the admin panel', async ({ page },testInfo) => {
   //Assert the greeting title has the correct text
   const homePage = new HomePagePOM(page);
   await homePage.assertTitleHasCorrectText();
+
+  //Save the login state
   await page.context().storageState({ path: 'storageState.json' });
 
 });
