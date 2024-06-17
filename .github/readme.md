@@ -55,20 +55,43 @@ Password: password
 
 # Test Scenarios
 
+### Setup Scenario
+
+- Step 1: Login To the platform
+- Step 2: Verify the welcome title is present
+
 ### Test Scenario 1(UI)
 
 - Step 1: Create Publisher
-- Step 2: Create Post
-- Step 3: Link to the Publisher created( Status= Active, Published= True) 
-- Step 4: Edit Post - Change status to remove
-- Step 5: Save
-- Step 6: Validate post status was changed to Remove from the Post page
+- Step 2: Verify Publisher was created
+- Step 3: Create Post
+- Step 4: Link to the Publisher created( Status= Active, Published= True) 
+- Step 5: Verify Post was created
+- Step 6: Verify Post is linked to Publisher, Post status is Active and Published is True
+- Step 7: Edit Post - Change status to remove
+- Step 8: Save
+- Step 9: Validate post status was changed to Remove from the Post page
 
 ### Test Scenario 2(API)
 
 - Step 1: Create Publisher with API
-- Step 2: Create Post with API
-- Step 3: Link to the Publisher created( Status= Active, Published= True) 
-- Step 4: Edit Post - Change status to remove
-- Step 5: Save
-- Step 6: Validate post status was changed to Remove from the Post page
+- Step 2: Verify Publisher was created
+- Step 3: Create Post with API
+- Step 4: Link to the Publisher created( Status= Active, Published= True) 
+- Step 5: Verify Post was created
+- Step 6: Verify Post is linked to Publisher, Post status is Active and Published is True
+- Step 7: Edit Post - Change status to remove
+- Step 8: Save
+- Step 9: Validate post status was changed to Remove from the Post page
+
+### Teardown(UI)
+
+- Step 1: Extract the tested enviroments
+- Step 2: Delete the newly created Posts on UI in this test project
+- Step 2: Delete the newly created Publishers on UI in this test project
+
+### Teardown(API)
+
+- Step 1: Extract the tested enviroments
+- Step 2: Delete the newly created Posts on API in this test project
+- Step 2: Delete the newly created Publishers on API in this test project
