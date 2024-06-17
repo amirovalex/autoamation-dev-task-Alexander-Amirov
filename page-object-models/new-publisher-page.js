@@ -33,4 +33,9 @@ exports.NewPublisherPagePOM = class NewPublisherPagePOM {
     await this.createPublisherButton.click()
   }
 
+  async fillPublisherForm() {
+    await this.fillNameInput();
+    await this.fillEmailInput();
+  }
+
 };

@@ -9,12 +9,16 @@ exports.PublisherPagePOM = class PublisherPagePOM {
     this.uniqueId = uniqueId
     this.page = page;
     this.publisherRowInTable
+    this.sortByIdButton = page.getByRole('link', {name:"#"})
     this.createNewPublisherButton = page.getByRole('link', { name: 'Create new' });
     this.filterMenuButton = page.locator('[data-css="Publisher-filter-button"]');
     this.filterNameInput = page.locator('[name="filter-name"]');
     this.filterEmailInput = page.locator('[name="filter-email"]');
+    this.filterIdInput = page.locator('[name="filter-id"]');
     this.filterApplyChangesButton = page.getByRole('button', { name: 'Apply Changes' });
     this.successfulyDeletedText = page.getByText('Successfully deleted given record')
+    this.successfulyCreatedText = page.getByText('Successfully created a new record')
+    this.successfulyUpdatedText = page.getByText('Successfully updated given record')
   }
 
   async goto() {
@@ -30,7 +34,6 @@ exports.PublisherPagePOM = class PublisherPagePOM {
   async clickFilterMenuButton() {
     //Click on Filter button
     // await expect(await this.filterMenuButton).toBeVisible()
-    console.log(await this.filterMenuButton)
     await this.filterMenuButton.click()
   }
   async clickFilterApplyChangesButton() {
@@ -40,19 +43,22 @@ exports.PublisherPagePOM = class PublisherPagePOM {
 
   async fillFilterNameInput() {
     //Fill the form with credentials
-    console.log(this.filterNameInput)
     await this.filterNameInput.fill('Test Publisher ' + this.uniqueId)
+  }
+
+  async sortPublishersByIdDesc() {
+    await this.sortByIdButton.click() 
+    await this.sortByIdButton.click()
   }
 
   async fillFilterEmailInput() {
     //Fill the form with credentials
-    console.log(this.filterEmailInput)
     await this.filterEmailInput.fill(`testemail${this.uniqueId}@example.com`)
   }
 
   async populatePublisherRowInTable() {
     //Populate publisher row in table
-    this.publisherRowInTable = this.page.locator('table tbody tr')
+    this.publisherRowInTable = this.page.locator('table tbody tr').locator('nth=0')
   }
 
   async clickPublisherRowInTable() {
@@ -65,8 +71,42 @@ exports.PublisherPagePOM = class PublisherPagePOM {
 
   }
 
-  async expectSuccessfulyDeletedText() {
+  async assertSuccessfulyDeletedTextIsVisible() {
     await this.successfulyDeletedText.click()
     await expect(this.successfulyDeletedText).toBeVisible()
+  }
+
+  async assertSuccessfulyCreatedTextIsVisible() {
+    await this.successfulyCreatedText.click()
+    await expect(this.successfulyCreatedText).toBeVisible()
+  }
+
+  async assertSuccessfulyUpdatedTextIsVisible() {
+    await this.successfulyUpdatedText.click()
+    await expect(this.successfulyUpdatedText).toBeVisible()
+  }
+
+  async filterPublisher() {
+    await this.clickFilterMenuButton();
+    await this.fillFilterNameInput();
+    await this.fillFilterEmailInput();
+    await this.clickFilterApplyChangesButton();
+  }
+
+  async findPublisherRowInTable() {
+    //Filter the publishers to find recently created one
+    await this.sortPublishersByIdDesc();
+    await this.populatePublisherRowInTable();
+  }
+
+  async assertPublisherIsVisibleInTable() {
+    console.log(this.publisherRowInTable)
+    await expect(this.publisherRowInTable).toBeVisible()
+  }
+
+  async filterPublishersByPublishertId(publisherId) {
+    await this.clickFilterMenuButton();
+    await this.filterIdInput.fill(`${publisherId}`)
+    await this.clickFilterApplyChangesButton();
   }
 };

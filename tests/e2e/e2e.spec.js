@@ -10,198 +10,124 @@ const crypto = require('crypto');
 const { test, expect } =  require('../../customFixtures.js')
 const globalContext = require('../../global-context.js');
 const { ApiUtils } = require('../../utils/apiUtils');
+const { UniqueIdUtils } = require('../../utils/uniqueIdUtils');
 
 require('dotenv').config()
 
 test('Check if a post can be created on a new publisher, and the publisher can change status to REMOVED', async ({ page, baseURL, browserName }) => {
-    let uniqueId = '';
-    if(browserName === 'chromium' && process.env.UNIQUE_ID_CHROME){
-        console.log('defaultBrowserType is chromium')
-        uniqueId = process.env.UNIQUE_ID_CHROME
-    }
-    if(browserName === 'firefox' && process.env.UNIQUE_ID_FIREFOX){
-        console.log('defaultBrowserType is firefox')
-        uniqueId = process.env.UNIQUE_ID_FIREFOX
-    }
-    if(browserName === 'webkit' && process.env.UNIQUE_ID_WEBKIT){
-        console.log('defaultBrowserType is safari')
-        uniqueId = process.env.UNIQUE_ID_WEBKIT
-    }
-    // Generate a short unique ID using crypto
-    console.log('unique id process.env.UNIQUE_ID_CHROME: ',process.env.UNIQUE_ID_CHROME)
-    
-    console.log(uniqueId); // Example output: '9f74d2b3'
-    
+    //Grab the unique ID of the browser
+    let uniqueId = new UniqueIdUtils(browserName,"UI").uniqueId; // Example output: '9f74d2b3'
+
+    //Step 1: Create Publisher
     const publisherPage = new PublisherPagePOM(page,uniqueId);
     await publisherPage.goto();
-
     await publisherPage.clickCreateNewPublisherButton();
-
-    const newPublisherPage = new NewPublisherPagePOM(page,uniqueId);
-
-    await newPublisherPage.fillNameInput();
-
-    await newPublisherPage.fillEmailInput();
-
-    await newPublisherPage.clickCreatePublisherButton();
-    console.log(page.url())
-    console.log(baseURL)
-    await expect(page).toHaveURL(/.*admin\/resources\/Publisher/);
     
+    
+    const newPublisherPage = new NewPublisherPagePOM(page,uniqueId);
+    await newPublisherPage.fillPublisherForm();
+    await newPublisherPage.clickCreatePublisherButton();
+    
+    //Assert Publisher was created
+    await publisherPage.assertSuccessfulyCreatedTextIsVisible()
+    
+    //Step 2: Create Post + Step 3: Link to the Publisher created( Status= Active, Published= True)
     const postPage = new PostPagePOM(page,uniqueId);
     await postPage.goto()
-
     await postPage.clickCreateNewPostButton();
 
     const newPostPage = new NewPostPagePOM(page,uniqueId);
-    
-    await newPostPage.fillTitleInput();
-    await newPostPage.fillContentInput();
-    await newPostPage.clickAddJSONData();
-    await newPostPage.fillSomeJSONNumber();
-    await newPostPage.fillSomeJSONString();
-    await newPostPage.clickSomeJSONBoolean();
-    // await newPostPage.fillJSONData();
-    await newPostPage.fillStatusInput();
-    await newPostPage.checkPublishedInput();
-    await newPostPage.fillPublisherInput();
-
+    await newPostPage.fillNewPostData();
     await newPostPage.clickCreatePostButton();
-    await expect(page).toHaveURL(/.*admin\/resources\/Post/);
 
-    await postPage.clickFilterMenuButton();
-    await postPage.fillFilterTitleInput();
-    await postPage.fillFilterContentInput();
-    await postPage.fillFilterPublisherInput();
-    await postPage.clickFilterApplyChangesButton();
-    await postPage.sortPostsByIdDesc();
-    await postPage.populatePostRowInTable();
+    //Assert Post was created
+    await postPage.assertSuccessfulyCreatedTextIsVisible()
+
+    //Filter the posts to find the recently created one
+    await postPage.filterPostsByPostData()
+    await postPage.findPostRowInTable();
+    
+    //Assert Post is visible in the table 
+    await postPage.assertPostIsVisibleInTable();
+    //Assert Post is linked to the Publisher created
     await postPage.clickPostRowInTable();
-
-    const showPostPage = new ShowPostPagePOM(page);
+    const showPostPage = new ShowPostPagePOM(page,uniqueId);
+    await showPostPage.assertPostIsLinkedToPublisher();
+    //Assert Post status is active
+    await showPostPage.assertPostStatusIsActive();
+    
+    //Step 4: Edit Post - Change status to remove
     await showPostPage.clickEditPostButton();
     const editPostPage = new EditPostPagePOM(page);
     await editPostPage.changeStatusToRemove();
+    
+    //Step 5: Save changes
     await editPostPage.clickSavePostEditButton();
 
-    await postPage.clickFilterMenuButton();
-    await postPage.fillFilterTitleInput();
-    await postPage.fillFilterContentInput();
-    await postPage.fillFilterPublisherInput();
-    await postPage.clickFilterApplyChangesButton();
-    await postPage.sortPostsByIdDesc();
-    await postPage.populatePostRowInTable();
+    //Assert Post was updated
+    await postPage.assertSuccessfulyUpdatedTextIsVisible()
+
+    //Step 6: Validate post status was changed to Remove from the Post page
+    await postPage.filterPostsByPostData()
+    await postPage.findPostRowInTable()
     await postPage.clickPostRowInTable();
 
-    await expect(showPostPage.postStatus).toHaveText("REMOVED")
+    //Assert Post is removed
+    await showPostPage.assertPostStatusIsRemoved();
 })
 
 test('Check if after a publisher and a post were created with API, the publisher can change status to REMOVED on the newly created post', async ({ page, baseURL, browserName }) => {
-    let uniqueId = 'api';
-    if(browserName === 'chromium' && process.env.UNIQUE_ID_CHROME){
-        console.log('defaultBrowserType is chromium')
-        uniqueId += process.env.UNIQUE_ID_CHROME
-    }
-    if(browserName === 'firefox' && process.env.UNIQUE_ID_FIREFOX){
-        console.log('defaultBrowserType is firefox')
-        uniqueId += process.env.UNIQUE_ID_FIREFOX
-    }
-    if(browserName === 'webkit' && process.env.UNIQUE_ID_WEBKIT){
-        console.log('defaultBrowserType is safari')
-        uniqueId += process.env.UNIQUE_ID_WEBKIT
-    }
+    //Grab the unique ID of the browser
+    let uniqueId = new UniqueIdUtils(browserName,'API').uniqueId; // Example output: '9f74d2b3'
+    console.log('uniqueId: ',uniqueId)
+    console.log('browserName: ',browserName)
+    //Declare the API utils with auth cookies
     const api = new ApiUtils('http://localhost:3000',await page.context().cookies());
 
-    // const loginResp = await api.login();
-    // console.log('loginResp: ',loginResp)
+    //Step 1:  Create Publisher using API
+    await api.createPublisher('Test Publisher ' + uniqueId, `testemail${uniqueId}@example.com`);
 
-    // Create Publisher using API
-    const publisher = await api.createPublisher('Test Publisher ' + uniqueId, `testemail${uniqueId}@example.com`);
-    console.log(publisher)
-    //Create Post using API
-    const post = await api.createPost({title:'Test Post Title ' + uniqueId, content:'Test Post Content ' + uniqueId, someJsonNumber:'123', someJsonString:'Some JSON String', someJsonBoolean:'true', status:'ACTIVE', published:'true' });
-    console.log(post)
-
-    // if(browserName === 'webkit') {
-    //     console.log('publisher: ',publisher)
-    // }
-    // Create Post using API
-
-//     title: Test Publisher Title
-// content: Test Publisher Content
-// someJson.0.number: 123
-// someJson.0.string: Some JSON String
-// someJson.0.boolean: true
-// status: ACTIVE
-// published: true
-// publisher: 238
-
-
-    // Generate a short unique ID using crypto
-    // console.log('unique id process.env.UNIQUE_ID_CHROME: ',process.env.UNIQUE_ID_CHROME)
-    
-    // console.log(uniqueId); // Example output: '9f74d2b3'
-    
+    //Assert Publisher was created
+    await expect(api.publisherId).toBeTruthy();
     // const publisherPage = new PublisherPagePOM(page,uniqueId);
     // await publisherPage.goto();
+    // await publisherPage.filterPublisher();
+    // await publisherPage.findPublisherRowInTable();
+    // await publisherPage.assertPublisherIsVisibleInTable();
 
-    // await publisherPage.clickCreateNewPublisherButton();
 
-    // const newPublisherPage = new NewPublisherPagePOM(page,uniqueId);
+    //Step 2: Create Post using API + Step 3: Link to the Publisher created( Status= Active, Published= True)
+    await api.createPost({title:'Test Post Title ' + uniqueId, content:'Test Post Content ' + uniqueId, someJsonNumber:'123', someJsonString:'Some JSON String', someJsonBoolean:'true', status:'ACTIVE', published:'true' });
 
-    // await newPublisherPage.fillNameInput();
+    //Assert Post was created
+    await expect(api.postId).toBeTruthy();
 
-    // await newPublisherPage.fillEmailInput();
+    const postPage = new PostPagePOM(page,uniqueId);
+    await postPage.goto()
+    // await postPage.filterPostsByPostData();
+    await postPage.filterPostsByPostId(api.postId);
+    await postPage.findPostRowInTable();
+    await postPage.clickPostRowInTable();
 
-    // await newPublisherPage.clickCreatePublisherButton();
-    // console.log(page.url())
-    // console.log(baseURL)
-    // await expect(page).toHaveURL(/.*admin\/resources\/Publisher/);
-    
-    // const postPage = new PostPagePOM(page,uniqueId);
-    // await postPage.goto()
+    //Assert Post is linked to the Publisher created
+    const showPostPage = new ShowPostPagePOM(page,uniqueId);
+    await showPostPage.assertPostIsLinkedToPublisher();
+    //Assert Post status is active
+    await showPostPage.assertPostStatusIsActive();
 
-    // await postPage.clickCreateNewPostButton();
+    //Step 4: Edit Post - Change status to remove
+    await showPostPage.clickEditPostButton();
+    const editPostPage = new EditPostPagePOM(page);
+    await editPostPage.changeStatusToRemove();
 
-    // const newPostPage = new NewPostPagePOM(page,uniqueId);
-    
-    // await newPostPage.fillTitleInput();
-    // await newPostPage.fillContentInput();
-    // await newPostPage.clickAddJSONData();
-    // await newPostPage.fillSomeJSONNumber();
-    // await newPostPage.fillSomeJSONString();
-    // await newPostPage.clickSomeJSONBoolean();
-    // // await newPostPage.fillJSONData();
-    // await newPostPage.fillStatusInput();
-    // await newPostPage.checkPublishedInput();
-    // await newPostPage.fillPublisherInput();
+    //Step 5: Save changes
+    await editPostPage.clickSavePostEditButton();
 
-    // await newPostPage.clickCreatePostButton();
-    // await expect(page).toHaveURL(/.*admin\/resources\/Post/);
+    //Step 6: Validate post status was changed to Remove from the Post page
+    await postPage.filterPostsByPostId(api.postId);
+    await postPage.findPostRowInTable()
+    await postPage.clickPostRowInTable();
 
-    // await postPage.clickFilterMenuButton();
-    // await postPage.fillFilterTitleInput();
-    // await postPage.fillFilterContentInput();
-    // await postPage.fillFilterPublisherInput();
-    // await postPage.clickFilterApplyChangesButton();
-    // await postPage.sortPostsByIdDesc();
-    // await postPage.populatePostRowInTable();
-    // await postPage.clickPostRowInTable();
-
-    // const showPostPage = new ShowPostPagePOM(page);
-    // await showPostPage.clickEditPostButton();
-    // const editPostPage = new EditPostPagePOM(page);
-    // await editPostPage.changeStatusToRemove();
-    // await editPostPage.clickSavePostEditButton();
-
-    // await postPage.clickFilterMenuButton();
-    // await postPage.fillFilterTitleInput();
-    // await postPage.fillFilterContentInput();
-    // await postPage.fillFilterPublisherInput();
-    // await postPage.clickFilterApplyChangesButton();
-    // await postPage.sortPostsByIdDesc();
-    // await postPage.populatePostRowInTable();
-    // await postPage.clickPostRowInTable();
-
-    // await expect(showPostPage.postStatus).toHaveText("REMOVED")
+    //Assert Post is removed
+    await showPostPage.assertPostStatusIsRemoved();    
 })

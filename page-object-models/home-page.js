@@ -16,7 +16,7 @@ exports.HomePagePOM = class HomePagePOM {
     await this.page.goto('./admin');
   }
 
-  async checkTitleHasCorrectText() {
+  async assertTitleHasCorrectText() {
   //Assert the title has the correct text
   await expect(this.greetingTitle).toHaveText(this.greetingText);
   }

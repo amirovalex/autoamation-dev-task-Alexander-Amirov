@@ -8,12 +8,9 @@ const  globalContext = require('./global-context.js');
 exports.expect = expect;
 exports.test = base.test.extend({
     uniqueIdChrome: async({}, use) => {
-        console.log('Accessing uniqueIdChrome in fixture:', globalContext.uniqueIdChrome); // Add this line for debugging
         await use(globalContext.uniqueIdChrome);},
     uniqueIdFirefox: async({}, use) => {
-        console.log('Accessing uniqueIdFirefox in fixture:', globalContext.uniqueIdFirefox); // Add this line for debugging
         await use(globalContext.uniqueIdFirefox);},
     uniqueIdSafari: async({}, use) => {
-        console.log('Accessing uniqueIdSafari in fixture:', globalContext.uniqueIdSafari); // Add this line for debugging
         await use(globalContext.uniqueIdSafari);},
 })

@@ -93,6 +93,17 @@ exports.NewPostPagePOM = class NewPostPagePOM {
     await this.clickSomeJSONBoolean()
   }
 
+  async fillNewPostData() {
+    await this.fillTitleInput();
+    await this.fillContentInput();
+    await this.clickAddJSONData();
+    await this.fillSomeJSONNumber();
+    await this.fillSomeJSONString();
+    await this.clickSomeJSONBoolean();
+    await this.fillStatusInput();
+    await this.checkPublishedInput();
+    await this.fillPublisherInput();
+  }
 
 
 };

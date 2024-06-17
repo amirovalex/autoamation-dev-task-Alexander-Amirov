@@ -30,6 +30,8 @@ module.exports = defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     storageState: 'storageState.json',
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
 
   /* Configure projects for major browsers */
@@ -41,7 +43,7 @@ module.exports = defineConfig({
     },
     {
       name: 'teardown',
-      testMatch: 'tests/teardown/teardownUI.spec.js',
+      testMatch: 'tests/teardown/teardown.spec.js',
     },
 
     {
