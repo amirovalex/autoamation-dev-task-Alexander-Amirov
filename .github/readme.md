@@ -37,21 +37,21 @@ Password: password
 
 # Test Project Instructions
 
-1.Download the project into a folder on your PC
-2.Use `npm install` to install dependencies
-3.Write a test run command specific to your needs like test projects to be runned and test browsers following this rules:
+1. Download the project into a folder on your PC
+2. Use `npm install` to install dependencies
+3. Write a test run command specific to your needs like test projects to be runned and test browsers following this rules:
 ```
-Specify Your Test Enviroment Browsers as: chromium, firefox, webkit
-Specify The Projects to be runned as: e2e-chromium, e2e-firefox, e2e-webkit
+- Specify Your Test Enviroment Browsers as: chromium, firefox, webkit
+- Specify The Projects to be runned as: e2e-chromium, e2e-firefox, e2e-webkit
 
-Your run command should look like this if you are running the test in all 3 browsers:
-TESTS_RUNNING_IN_ENVIROMENTS=chromium,firefox,webkit npx playwright test --project=e2e-chromium --project=e2e-firefox --project=e2e-webkit
+- Your run command should look like this if you are running the test in all 3 browsers:
+`TESTS_RUNNING_IN_ENVIROMENTS=chromium,firefox,webkit npx playwright test --project=e2e-chromium --project=e2e-firefox --project=e2e-webkit`
 
-Your run command should look like this if you are running the test in Chromium browser:
-TESTS_RUNNING_IN_ENVIROMENTS=chromium npx playwright test --project=e2e-chromium
+- Your run command should look like this if you are running the test in Chromium browser:
+`TESTS_RUNNING_IN_ENVIROMENTS=chromium npx playwright test --project=e2e-chromium`
 ```
-4.To open the test report run this command: `npx playwright show-report`
-5.On failed tests a video and screenshot will be saved leting the tester to verify the steps that caused the fail
+4. To open the test report run this command: `npx playwright show-report`
+5. On failed tests a video and screenshot will be saved leting the tester to verify the steps that caused the fail
 
 # Test Scenarios
 
