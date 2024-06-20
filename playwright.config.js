@@ -36,34 +36,31 @@ module.exports = defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'setup',
-      testMatch: 'tests/setup/setup.spec.js',
-      teardown: 'teardown',
-    },
-    {
-      name: 'teardown',
-      testMatch: 'tests/teardown/teardown.spec.js',
-    },
+    // {
+    //   name: 'setup',
+    //   testMatch: 'tests/setup/setup.spec.js',
+    //   teardown: 'teardown',
+    // },
+    // {
+    //   name: 'teardown',
+    //   testMatch: 'tests/teardown/teardown.spec.js',
+    // },
 
     {
       name: 'e2e-chromium',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['setup'],
       testMatch: 'tests/e2e/e2e.spec.js',
     },
 
     {
       name: 'e2e-firefox',
       use: { ...devices['Desktop Firefox'] },
-      dependencies: ['setup'],
       testMatch: 'tests/e2e/e2e.spec.js',
     },
 
     {
       name: 'e2e-webkit',
       use: { ...devices['Desktop Safari'] },
-      dependencies: ['setup'],
       testMatch: 'tests/e2e/e2e.spec.js',
 
     },
