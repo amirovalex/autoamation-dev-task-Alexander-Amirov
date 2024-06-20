@@ -28,4 +28,14 @@ exports.LoginPagePOM = class LoginPagePOM {
     //Click on Login button to login
     await this.loginButton.click()
   }
+
+  async loginToThePage() {
+    await this.goto();
+  
+    //Fill the login form with credentials
+    await this.fillFormWithCredentials();
+  
+    //Login to the admin panel
+    await this.clickLoginButton();
+  }
 };

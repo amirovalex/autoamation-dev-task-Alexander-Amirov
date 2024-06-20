@@ -1,5 +1,5 @@
 const { expect } = require('@playwright/test');
-
+const { NewPublisherPagePOM } = require('./new-publisher-page');
 exports.PublisherPagePOM = class PublisherPagePOM {
 
   /**
@@ -107,5 +107,14 @@ exports.PublisherPagePOM = class PublisherPagePOM {
     await this.clickFilterMenuButton();
     await this.filterIdInput.fill(`${publisherId}`)
     await this.clickFilterApplyChangesButton();
+  }
+
+  async createNewPublisher() {
+    await this.goto();
+    await this.clickCreateNewPublisherButton();
+  
+    const newPublisherPage = new NewPublisherPagePOM(this.page,this.uniqueId);
+    await newPublisherPage.fillPublisherForm();
+    await newPublisherPage.clickCreatePublisherButton();
   }
 };

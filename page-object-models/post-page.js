@@ -1,4 +1,7 @@
 const { expect } = require('@playwright/test');
+const { NewPostPagePOM } = require('./new-post-page');
+const { ShowPostPagePOM } = require('./show-post-page');
+const { EditPostPagePOM } = require('./edit-post-page');
 
 exports.PostPagePOM = class PostPagePOM {
 
@@ -115,5 +118,40 @@ exports.PostPagePOM = class PostPagePOM {
     await this.clickFilterMenuButton();
     await this.filterIdInput.fill(`${postId}`)
     await this.clickFilterApplyChangesButton();
+  }
+
+  async createNewPost() {
+    await this.goto()
+    await this.clickCreateNewPostButton();
+
+    const newPostPage = new NewPostPagePOM(this.page,this.uniqueId);
+    await newPostPage.fillNewPostData();
+    await newPostPage.clickCreatePostButton();
+  }
+
+  async changePostStatusToRemoved() {
+    await this.goto()
+    await this.filterPostsByPostData()
+    await this.findPostRowInTable();
+    
+    //Assert Post is linked to the Publisher created
+    await this.clickPostRowInTable();
+    const showPostPage = new ShowPostPagePOM(this.page,this.uniqueId);
+    
+    await showPostPage.clickEditPostButton();
+    const editPostPage = new EditPostPagePOM(this.page);
+    await editPostPage.changeStatusToRemove();
+    
+    //Step 5: Save changes
+    await editPostPage.clickSavePostEditButton();
+  }
+
+  async validatePostStatusChanedToRemoved() {
+    await this.filterPostsByPostData()
+    await this.findPostRowInTable()
+    await this.clickPostRowInTable();
+    
+    const showPostPage = new ShowPostPagePOM(this.page,this.uniqueId);
+    await showPostPage.assertPostStatusIsRemoved();
   }
 };
